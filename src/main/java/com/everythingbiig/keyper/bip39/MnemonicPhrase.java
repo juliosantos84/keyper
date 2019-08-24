@@ -1,5 +1,7 @@
 package com.everythingbiig.keyper.bip39;
 
+import com.google.gson.Gson;
+
 public class MnemonicPhrase {
 
     public static final int PHRASE_SIZE_DEFAULT = 24;
@@ -7,11 +9,15 @@ public class MnemonicPhrase {
     private String[] phrase = null;
 
     public MnemonicPhrase() {
-        phrase = new String[PHRASE_SIZE_DEFAULT];
+        this.phrase = new String[PHRASE_SIZE_DEFAULT];
+    }
+
+    public MnemonicPhrase(String[] phrase) {
+        this.phrase = phrase;
     }
 
     public void setPhrase(String[] phrase) {
-
+        this.phrase = phrase;
     }
 
     public String[] getPhrase() {
@@ -19,6 +25,6 @@ public class MnemonicPhrase {
     }
 
     public String toText() {
-        return "";
+        return new Gson().toJson(this.phrase);
     }
 }

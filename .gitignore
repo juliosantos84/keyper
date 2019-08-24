@@ -4,3 +4,4 @@
 .settings/
 .vscode/
 build/
+bin/main/*
