@@ -12,4 +12,16 @@ public class WordlistTest {
         int actualWordCount = Wordlist.getWordlist().length;
         Assertions.assertEquals(expectedWordCount, actualWordCount);
     }
+
+    @Test
+    public void testGetWordlistValues() {
+        String[] expectedValues = new String[2048];
+        expectedValues[0] = "abandon"; // First
+        expectedValues[1023] = "lend"; // Middle
+        expectedValues[2047] = "zoo"; // Last
+        String[] actualValues = Wordlist.getWordlist();
+        Assertions.assertEquals(expectedValues[0], actualValues[0]);
+        Assertions.assertEquals(expectedValues[1023], actualValues[1023]);
+        Assertions.assertEquals(expectedValues[2047], actualValues[2047]);
+    }
 }
