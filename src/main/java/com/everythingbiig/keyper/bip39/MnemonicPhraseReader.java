@@ -15,12 +15,7 @@ public class MnemonicPhraseReader {
             System.out.println("Enter " + count + " words:\n");
             for(int i = 0; i < phrase.length; i++) {
                 System.out.print("word #" + i + ":");
-                String word = br.readLine();
-                while(!Wordlist.isValidWord(word)) {
-                    System.out.println("> The word you entered is not valid, try again.");
-                    word = br.readLine();
-                }
-                phrase[i] = word;
+                phrase[i] = getWord(br);
                 System.out.println();
             }
         } catch (IOException ioex) {
@@ -35,6 +30,15 @@ public class MnemonicPhraseReader {
             }
         }
         return new MnemonicPhrase(phrase);
+    }
+
+    private String getWord(BufferedReader br) throws IOException {
+        String word = br.readLine();
+        while(!Wordlist.isValidWord(word)) {
+            System.out.println("The word you entered is not valid, try again.");
+            word = br.readLine();
+        }
+        return word;
     }
 
     public static void main(String[] args) {
