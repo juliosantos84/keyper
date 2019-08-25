@@ -1,10 +1,8 @@
 package com.everythingbiig.keyper.bip39;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,11 +11,9 @@ import java.util.Set;
 
 public class Wordlist {
 
-    private static final String wordlistPath = "wordlist.txt";
+    private static final String wordlistPath = "/wordlist.txt";
 
-    private static String[] wordlist = null;
-    private static Set<String> wordlistSet = null;
-    
+    private static String[] wordlist = null;    
 
     public static String[] getWordlist() {
         if (wordlist != null) {
@@ -26,8 +22,7 @@ public class Wordlist {
         }
 
         wordlist = getWordlistFromFile();
-        
-        System.out.println("Returning " + wordlist);
+
         return wordlist;
     }
 
@@ -36,19 +31,15 @@ public class Wordlist {
     }
 
     private static String[] getWordlistFromFile() {
+        System.out.println("> Lazy loading the wordlist from file.");
         List<String> wordlistTmp = new ArrayList<String>();
          
         BufferedReader reader = null;
         
         try {
-            File wordlistFile = new File(
-                Wordlist.class.getClassLoader().getResource(wordlistPath).getFile());
-
-            if ( !wordlistFile.exists() ) {
-                throw new FileNotFoundException(wordlistPath);
-            }
-
-            reader = new BufferedReader(new FileReader(wordlistFile));
+            reader = new BufferedReader(
+                new InputStreamReader(
+                    Wordlist.class.getResourceAsStream(wordlistPath)));
 
             String word = null;
             while( (word = reader.readLine()) != null) {
@@ -66,11 +57,11 @@ public class Wordlist {
                 }
             }
         }
+        System.out.println("> Loaded a wordlist of size: " + wordlistTmp.size());
         return wordlistTmp.toArray(new String[0]);
     }
 
     public static boolean isValidWord(String word) {
-        Set<String> wordlist = getWordlistSet();
-        return wordlist.contains(word);
+        return getWordlistSet().contains(word);
     }
 }

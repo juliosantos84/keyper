@@ -6,3 +6,4 @@
 build/
 .class
 .DS_Store
+bin/**/*.class
