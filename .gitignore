@@ -6,4 +6,5 @@
 build/
 .class
 .DS_Store
-bin/**/*.class
+bin/main/
+bin/test/
