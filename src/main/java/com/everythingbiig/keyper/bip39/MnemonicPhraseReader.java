@@ -40,6 +40,6 @@ public class MnemonicPhraseReader {
     public static void main(String[] args) {
         MnemonicPhraseReader mpr = new MnemonicPhraseReader();
         MnemonicPhrase mp = mpr.readFromStandardIn(3);
-        System.out.println("Menemonic Phrase: \n" + mp.toText());
+        System.out.println(mp.toText());
     }
 }
