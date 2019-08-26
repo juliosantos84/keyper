@@ -1,5 +1,7 @@
 package com.everythingbiig.keyper;
 
+import java.io.File;
+
 import com.everythingbiig.keyper.bip39.MnemonicPhrase;
 import com.everythingbiig.keyper.bip39.MnemonicPhraseReader;
 
@@ -25,12 +27,18 @@ public class Keyper {
 
         SdkBytes encryptedBytes = secretManager.encryptString(json);
 
-        String decryptedJson = secretManager.decryptString(encryptedBytes);
+        File secretFile = new File("./secrets/dev-secret");
+        
+        secretManager.writeToFile(secretFile.getAbsolutePath(), encryptedBytes);
+
+        SdkBytes encryptedBytesFromFile = secretManager.readFromFile(secretFile.getAbsolutePath());
+
+        String decryptedJson = secretManager.decryptString(encryptedBytesFromFile);
 
         MnemonicPhrase fromJson = new MnemonicPhrase();
         fromJson.fromJson(decryptedJson);
 
-        System.out.println("Decrypted: \n" + fromJson.toText());
+        System.out.println("Decrypted (from file): \n" + fromJson.toText());
 
     }
 }
