@@ -1,5 +1,8 @@
 package com.everythingbiig.keyper;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 
 import com.amazonaws.services.kms.AWSKMS;
@@ -47,5 +50,47 @@ public class KmsSecretManager {
 
     public String decryptString(SdkBytes cipherblob) {
         return new String(decryptBytes(cipherblob).asByteArray());
+    }
+
+    public void writeToFile(String filePath, SdkBytes bytes) throws Exception {
+        File file = new File(filePath);
+        if (file.exists()) {
+            throw new Exception("The file " + file.getAbsolutePath() + 
+                " already exists, please rename/delete manually before proceeding.");
+        }
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(bytes.asByteArray());
+            fos.flush();
+        } finally {
+            if (fos != null) {
+                fos.close();
+            }
+        }
+    }
+
+    public SdkBytes readFromFile(String filePath) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new Exception("The file " + file.getAbsolutePath() + 
+                " doesn't exist");
+        }
+        byte[] fileContents = new byte[ (int) file.length() ];
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            
+            fis.read(fileContents);
+
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+        }
+        return SdkBytes.fromByteArray(fileContents);
     }
 }
