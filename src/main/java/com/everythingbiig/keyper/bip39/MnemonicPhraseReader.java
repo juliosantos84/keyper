@@ -32,11 +32,11 @@ public class MnemonicPhraseReader {
 
         String[] phrase = new String[phraseSize];
         try {
-            System.out.println("Enter " + phraseSize + " words:\n");
+            System.out.println(String.format("Enter %02d words:\n", phraseSize));
             for(int i = 0; i < phrase.length; i++) {
-                System.out.print("word #" + i + ":");
+                System.out.print(String.format("word %02d: ", (i + 1)));
                 phrase[i] = getWord(reader);
-                System.out.println();
+                System.out.println("\n");
             }
         } catch (IOException ioex) {
             ioex.printStackTrace();
@@ -55,15 +55,10 @@ public class MnemonicPhraseReader {
     private String getWord(BufferedReader br) throws IOException {
         String word = br.readLine();
         while(!Wordlist.isValidWord(word)) {
-            System.out.println("The word you entered is not valid, try again.");
+            System.out.print(String.format("'%s' is invalid, try again: ", word));
             word = br.readLine();
+            System.out.println("\n");
         }
         return word;
     }
-
-    // public static void main(String[] args) {
-    //     MnemonicPhraseReader mpr = new MnemonicPhraseReader(3);
-    //     MnemonicPhrase mp = mpr.readFromStandardIn();
-    //     System.out.println(mp.toText());
-    // }
 }

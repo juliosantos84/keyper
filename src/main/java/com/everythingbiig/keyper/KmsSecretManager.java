@@ -40,7 +40,6 @@ public class KmsSecretManager {
         DecryptRequest req = new DecryptRequest();
         req.setCiphertextBlob(cipherblob.asByteBuffer());
         DecryptResult res = kmsClient.decrypt(req);
-        System.out.println("res.plaintext: " + res.getPlaintext());        
         return SdkBytes.fromByteBuffer(res.getPlaintext());
     }
 
@@ -55,8 +54,10 @@ public class KmsSecretManager {
     public void writeToFile(String filePath, SdkBytes bytes) throws Exception {
         File file = new File(filePath);
         if (file.exists()) {
-            throw new Exception("The file " + file.getAbsolutePath() + 
-                " already exists, please rename/delete manually before proceeding.");
+            throw new Exception(
+                String.format("The file %s already exists, please rename/delete manually before proceeding.", 
+                file.getAbsolutePath())
+            );
         }
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
@@ -76,8 +77,7 @@ public class KmsSecretManager {
     public SdkBytes readFromFile(String filePath) throws Exception {
         File file = new File(filePath);
         if (!file.exists()) {
-            throw new Exception("The file " + file.getAbsolutePath() + 
-                " doesn't exist");
+            throw new Exception(String.format("The file %s doesn't exist", file.getAbsolutePath()));
         }
         byte[] fileContents = new byte[ (int) file.length() ];
         FileInputStream fis = null;

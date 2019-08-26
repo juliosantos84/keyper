@@ -16,7 +16,6 @@ public class Wordlist {
 
     public static String[] getWordlist() {
         if (wordlist != null) {
-            System.out.println("Returning wordlist");
             return wordlist;
         }
 
@@ -30,7 +29,6 @@ public class Wordlist {
     }
 
     private static String[] getWordlistFromFile() {
-        System.out.println("> Lazy loading the wordlist from file.");
         List<String> wordlistTmp = new ArrayList<String>();
          
         BufferedReader reader = null;
@@ -56,7 +54,6 @@ public class Wordlist {
                 }
             }
         }
-        System.out.println("> Loaded a wordlist of size: " + wordlistTmp.size());
         return wordlistTmp.toArray(new String[0]);
     }
 

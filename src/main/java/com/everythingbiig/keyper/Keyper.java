@@ -11,12 +11,13 @@ public class Keyper {
 
     private static final String KMS_TEST_KEY = "arn:aws:kms:us-east-1:297473205123:key/c539da97-bcd9-448c-9def-1b3cf3ddbded";
 
-    public static void main(String[] args) throws Exception {
-        // MnemonicPhraseReader phraseReader = 
-        //     new MnemonicPhraseReader(MnemonicPhraseReader.PHRASE_SIZE_DEFAULT, null)=/
+    private static final int PHRASE_SIZE = Integer.parseInt(System.getenv("KEYPER_PHRASE_SIZE"));
 
+    private static final String SECRET_FILE = System.getenv("KEYPER_SECRET_FILE");
+
+    public static void main(String[] args) throws Exception {
         MnemonicPhraseReader phraseReader = 
-            new MnemonicPhraseReader(3, null);
+            new MnemonicPhraseReader(PHRASE_SIZE, null);
         KmsSecretManager secretManager = new KmsSecretManager(KMS_TEST_KEY);
 
         MnemonicPhrase phrase = phraseReader.readFromStandardIn();
@@ -27,7 +28,7 @@ public class Keyper {
 
         SdkBytes encryptedBytes = secretManager.encryptString(json);
 
-        File secretFile = new File("./secrets/dev-secret");
+        File secretFile = new File(SECRET_FILE);
         
         secretManager.writeToFile(secretFile.getAbsolutePath(), encryptedBytes);
 
