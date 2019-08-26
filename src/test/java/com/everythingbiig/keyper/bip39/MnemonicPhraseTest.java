@@ -15,6 +15,17 @@ public class MnemonicPhraseTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    @Test
+    public void testFromJson() {
+        String[] expectedPhraseArray = { "zoo", "apple", "lend" };
+        String jsonPhrase = "[\"zoo\",\"apple\",\"lend\"]";
+        MnemonicPhrase expected = new MnemonicPhrase(expectedPhraseArray);
+        
+        MnemonicPhrase actual = new MnemonicPhrase();
+        actual.fromJson(jsonPhrase);
+        Assertions.assertEquals(expected, actual);
+    }
+
     public static String[] getPhrase() {
         String[] phrase = new String[24];
         for (int i = 0; i < phrase.length; i++) {

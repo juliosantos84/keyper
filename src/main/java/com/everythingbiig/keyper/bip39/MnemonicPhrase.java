@@ -1,5 +1,7 @@
 package com.everythingbiig.keyper.bip39;
 
+import java.util.Arrays;
+
 import com.google.gson.Gson;
 
 public class MnemonicPhrase {
@@ -40,5 +42,17 @@ public class MnemonicPhrase {
 
     public String toJson() {
         return new Gson().toJson(this.phrase);
+    }
+
+    public void fromJson(String jsonPhrase) {
+        this.phrase = new Gson().fromJson(jsonPhrase, new String[0].getClass());
+    }
+
+    @Override
+    public boolean equals(Object mnemonicPhrase) {
+        if ( !(mnemonicPhrase instanceof MnemonicPhrase)) {
+            return false;
+        }
+        return Arrays.equals(this.phrase, ((MnemonicPhrase)mnemonicPhrase).getPhrase());
     }
 }
