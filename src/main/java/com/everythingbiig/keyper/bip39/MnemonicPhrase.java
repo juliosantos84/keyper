@@ -27,15 +27,10 @@ public class MnemonicPhrase {
     }
 
     public String toText() {
-        int half = (this.phrase.length / 2) + 1;
-        StringBuilder sb = new StringBuilder("MnemonicPhrase:\n");
-        for (int i = 0; i < half; i++) {
-            sb.append(String.format("%02d: %s", i + 1, this.phrase[i]));
-            int offset = i + half;
-            if(offset < this.phrase.length) {
-                sb.append("\t\t\t");
-                sb.append(String.format("%02d: %s\n", offset + 1, this.phrase[offset]));
-            }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < this.phrase.length; i++) {
+            sb.append(String.format("%02d: %s", (i+1), phrase[i]));
+            sb.append("\n");
         }
         return sb.toString();
     }
