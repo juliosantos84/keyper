@@ -10,8 +10,11 @@ public class Keyper {
     private static final String KMS_TEST_KEY = "arn:aws:kms:us-east-1:297473205123:key/c539da97-bcd9-448c-9def-1b3cf3ddbded";
 
     public static void main(String[] args) throws Exception {
+        // MnemonicPhraseReader phraseReader = 
+        //     new MnemonicPhraseReader(MnemonicPhraseReader.PHRASE_SIZE_DEFAULT, null)=/
+
         MnemonicPhraseReader phraseReader = 
-            new MnemonicPhraseReader(MnemonicPhraseReader.PHRASE_SIZE_DEFAULT, null);
+            new MnemonicPhraseReader(3, null);
         KmsSecretManager secretManager = new KmsSecretManager(KMS_TEST_KEY);
 
         MnemonicPhrase phrase = phraseReader.readFromStandardIn();
@@ -24,7 +27,10 @@ public class Keyper {
 
         String decryptedJson = secretManager.decryptString(encryptedBytes);
 
-        System.out.println("Decrypted: \n" + decryptedJson);
+        MnemonicPhrase fromJson = new MnemonicPhrase();
+        fromJson.fromJson(decryptedJson);
+
+        System.out.println("Decrypted: \n" + fromJson.toText());
 
     }
 }
