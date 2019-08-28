@@ -12,14 +12,15 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class MnemonicPhrase {
 
+    private static String KEYPER_PHRASE_SIZE = System.getenv("KEYPER_PHRASE_SIZE");
+
     private String[] phrase = null;
 
     private KmsSecretManager secretManager = new KmsSecretManager();
 
     public MnemonicPhrase() {
-        String envSize = System.getenv("KEYPER_PHRASE_SIZE");
-        if ( envSize != null && envSize.length() > 0 ) {
-            this.phrase = new String[Integer.parseInt(System.getenv("KEYPER_PHRASE_SIZE"))];
+        if ( KEYPER_PHRASE_SIZE != null && KEYPER_PHRASE_SIZE.length() > 0 ) {
+            this.phrase = new String[Integer.parseInt(KEYPER_PHRASE_SIZE)];
         } else {
             this.phrase = new String[24];
         }

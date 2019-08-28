@@ -18,10 +18,6 @@ public class Keyper {
     static {
         options.addOption("d", "decrypt (on-screen only) the given file");
     }
-    
-    
-
-    private static final int PHRASE_SIZE = Integer.parseInt(System.getenv("KEYPER_PHRASE_SIZE"));
 
     private static final File SECRET_FILE = new File(System.getenv("KEYPER_SECRET_FILE"));
 
@@ -29,7 +25,7 @@ public class Keyper {
         CommandLine cmd = parser.parse( options, args);
 
         MnemonicPhraseReader phraseReader = 
-            new MnemonicPhraseReader(PHRASE_SIZE, null);
+            new MnemonicPhraseReader();
 
         if (cmd.hasOption("d")) {
             // Decrypt from the given file
@@ -50,11 +46,12 @@ public class Keyper {
     
             encryptToFile(phrase, SECRET_FILE);
     
+            System.out.println("\n");
+            
             MnemonicPhrase fromJson = decryptFromFile(SECRET_FILE);
 
             print(fromJson);
         }
-
     }
 
     private static void print(MnemonicPhrase fromJson) {
