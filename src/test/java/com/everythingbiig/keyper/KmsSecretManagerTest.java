@@ -1,7 +1,5 @@
 package com.everythingbiig.keyper;
 
-import java.io.File;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -43,28 +41,4 @@ public class KmsSecretManagerTest {
         String decryptedString = mgr.decryptString(cipherblob);
         Assertions.assertEquals(plaintext, decryptedString);
     }
-
-    @Test
-    public void testWriteReadFromFile() throws Exception {
-        String expectedText = "Some Text";
-        SdkBytes textBytes = SdkBytes.fromByteArray(expectedText.getBytes());
-
-        File secretFile = new File("./tmp/secret-file");
-        secretFile.deleteOnExit();
-
-        mgr.writeToFile(secretFile.getAbsolutePath(), textBytes);
-
-        SdkBytes readBytes = mgr.readFromFile(secretFile.getAbsolutePath());
-        String actualText = new String(readBytes.asByteArray());
-
-        Assertions.assertEquals(expectedText, actualText);
-    }
-
-    // @AfterAll
-    // public void cleanup() {
-    //     File secretFile = new File("./tmp/secret-file");
-    //     if(secretFile.exists()) {
-    //         secretFile.deleteO
-    //     }
-    // }
 }

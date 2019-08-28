@@ -1,6 +1,8 @@
 package com.everythingbiig.keyper.bip39;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.Arrays;
 
 import com.everythingbiig.keyper.KmsSecretManager;
@@ -59,8 +61,12 @@ public class MnemonicPhrase {
         return Arrays.equals(this.phrase, ((MnemonicPhrase)mnemonicPhrase).getPhrase());
     }
 
+    protected void setSecretManager(KmsSecretManager secretManager) {
+        this.secretManager = secretManager;
+    }
+    
     public void decryptFromFile(File file) throws Exception {
-        SdkBytes encryptedBytesFromFile = secretManager.readFromFile(file.getAbsolutePath());
+        SdkBytes encryptedBytesFromFile = readFromFile(file.getAbsolutePath());
         String decryptedJson = secretManager.decryptString(encryptedBytesFromFile);
         MnemonicPhrase fromJson = new MnemonicPhrase();
         fromJson.fromJson(decryptedJson);
@@ -69,6 +75,49 @@ public class MnemonicPhrase {
 
     public void encryptToFile(File file) throws Exception {
         SdkBytes encryptedBytes = secretManager.encryptString(this.toJson());
-        secretManager.writeToFile(file.getAbsolutePath(), encryptedBytes);
+        writeToFile(file.getAbsolutePath(), encryptedBytes);
+    }
+
+    protected void writeToFile(String filePath, SdkBytes bytes) throws Exception {
+        File file = new File(filePath);
+        if (file.exists()) {
+            throw new Exception(
+                String.format("The file %s already exists, please rename/delete manually before proceeding.", 
+                file.getAbsolutePath())
+            );
+        }
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(bytes.asByteArray());
+            fos.flush();
+        } finally {
+            if (fos != null) {
+                fos.close();
+            }
+        }
+    }
+
+    protected SdkBytes readFromFile(String filePath) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new Exception(String.format("The file %s doesn't exist", file.getAbsolutePath()));
+        }
+        byte[] fileContents = new byte[ (int) file.length() ];
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            
+            fis.read(fileContents);
+
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+        }
+        return SdkBytes.fromByteArray(fileContents);
     }
 }
