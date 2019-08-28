@@ -9,7 +9,7 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class Keyper {
 
-    private static final String KMS_TEST_KEY = "arn:aws:kms:us-east-1:297473205123:key/c539da97-bcd9-448c-9def-1b3cf3ddbded";
+    private static final String KMS_TEST_KEY = System.getenv("AWS_KMS_KEY_ARN");
 
     private static final int PHRASE_SIZE = Integer.parseInt(System.getenv("KEYPER_PHRASE_SIZE"));
 
