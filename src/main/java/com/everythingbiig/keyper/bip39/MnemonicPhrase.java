@@ -12,16 +12,25 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class MnemonicPhrase {
 
-    private static final String AWS_KMS_KEY_ARN = System.getenv("AWS_KMS_KEY_ARN");
-
-    public static final int PHRASE_SIZE_DEFAULT = 24;
-
     private String[] phrase = null;
 
-    private KmsSecretManager secretManager = new KmsSecretManager(AWS_KMS_KEY_ARN);
+    private KmsSecretManager secretManager = new KmsSecretManager();
 
     public MnemonicPhrase() {
-        this.phrase = new String[PHRASE_SIZE_DEFAULT];
+        String envSize = System.getenv("KEYPER_PHRASE_SIZE");
+        if ( envSize != null && envSize.length() > 0 ) {
+            this.phrase = new String[Integer.parseInt(System.getenv("KEYPER_PHRASE_SIZE"))];
+        } else {
+            this.phrase = new String[24];
+        }
+    }
+    
+    public MnemonicPhrase(int phraseSize) {
+        this.phrase = new String[phraseSize];
+    }
+
+    public MnemonicPhrase(String json) {
+        fromJson(json);
     }
 
     public MnemonicPhrase(String[] phrase) {
@@ -64,13 +73,11 @@ public class MnemonicPhrase {
     protected void setSecretManager(KmsSecretManager secretManager) {
         this.secretManager = secretManager;
     }
-    
+
     public void decryptFromFile(File file) throws Exception {
         SdkBytes encryptedBytesFromFile = readFromFile(file.getAbsolutePath());
         String decryptedJson = secretManager.decryptString(encryptedBytesFromFile);
-        MnemonicPhrase fromJson = new MnemonicPhrase();
-        fromJson.fromJson(decryptedJson);
-        this.phrase = fromJson.phrase;
+        fromJson(decryptedJson);
     }
 
     public void encryptToFile(File file) throws Exception {

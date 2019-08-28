@@ -13,12 +13,22 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class KmsSecretManager {
     
+    private static final String AWS_KMS_KEY_ARN = System.getenv("AWS_KMS_KEY_ARN");
+
     private static final AWSKMS kmsClient = AWSKMSClientBuilder.defaultClient();
 
     private String kmsKey = null;
 
+    public KmsSecretManager() {
+        this.kmsKey = AWS_KMS_KEY_ARN;
+    }
+
     public KmsSecretManager(String kmsKey) {
-        this.kmsKey = kmsKey;
+        if(kmsKey != null) {
+            this.kmsKey = kmsKey;
+        } else {
+            this.kmsKey = AWS_KMS_KEY_ARN;
+        }
     }
 
     public String getKey() {
