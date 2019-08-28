@@ -9,7 +9,7 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class Keyper {
 
-    private static final String KMS_TEST_KEY = System.getenv("AWS_KMS_KEY_ARN");
+    private static final String AWS_KMS_KEY_ARN = System.getenv("AWS_KMS_KEY_ARN");
 
     private static final int PHRASE_SIZE = Integer.parseInt(System.getenv("KEYPER_PHRASE_SIZE"));
 
@@ -18,7 +18,7 @@ public class Keyper {
     public static void main(String[] args) throws Exception {
         MnemonicPhraseReader phraseReader = 
             new MnemonicPhraseReader(PHRASE_SIZE, null);
-        KmsSecretManager secretManager = new KmsSecretManager(KMS_TEST_KEY);
+        KmsSecretManager secretManager = new KmsSecretManager(AWS_KMS_KEY_ARN);
 
         MnemonicPhrase phrase = phraseReader.readFromStandardIn();
 

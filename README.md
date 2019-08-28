@@ -13,10 +13,10 @@ A simple utility to encrypt mnemonic phrases.
 2. Create an IAM user with permissions to use the key created.
 3. Create an access key for the user.
 
-# usage
+## usage
 
 Run `bin/capture-phrase-container.sh us-east-1 <SECRET_KEY_ID> <SECRET_ACCESS_KEY> <KMS_KEY_ARN>`
 
-This will place the encrypted mnemonic phrase in `/tmp/secret/keyper-secret` - this can be overridden in `bin/capture-phrase-container.sh`.
+This will place the encrypted mnemonic phrase in `/tmp/secret/keyper-secret` - this location can be overridden in `bin/capture-phrase-container.sh`.
 
 Save this file somewhere safe, maybe S3 or a personal USB stick.
