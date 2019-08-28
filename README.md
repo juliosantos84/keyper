@@ -1,11 +1,12 @@
 # keyper
 
-A simple utility to encrypt mnemonic phrases.
+A simple utility to encrypt mnemonic phrases using AWS KMS.
 
 ## building
 
-1. Run `gradle build shadowJar` to generate a fat jar.
-2. Run `build-container.sh` to create a container to run the utility in.  This is optional to create a sandbox environment in an isolated network.
+1. Run `bin/build-all.sh`.
+
+If you don't want to use the container, you can run `bin/build-java.sh` instead.
 
 ## setup
 
@@ -15,8 +16,25 @@ A simple utility to encrypt mnemonic phrases.
 
 ## usage
 
-Run `bin/capture-phrase-container.sh us-east-1 <SECRET_KEY_ID> <SECRET_ACCESS_KEY> <KMS_KEY_ARN>`
+You can run this on your local environment, or in a container.
+
+Before starting configure the 
+### capture
+
+Captures a mnemonic phrase and encrypts it to a file
+
+1. Run `bin/run-container-capture.sh <REGION> <SECRET_KEY_ID> <SECRET_ACCESS_KEY> <KMS_KEY_ARN>`
 
 This will place the encrypted mnemonic phrase in `/tmp/secret/keyper-secret` - this location can be overridden in `bin/capture-phrase-container.sh`.
 
-Save this file somewhere safe, maybe S3 or a personal USB stick.
+2. Save this file somewhere safe, maybe S3 or a personal USB stick.
+
+### decrypt
+
+Decrypts a file to display the mnemonic phrase
+
+1. Run `bin/run-container-decrypt.sh <REGION> <SECRET_KEY_ID> <SECRET_ACCESS_KEY>  <KMS_KEY_ARN>`
+
+This will read the encrypted file in `/tmp/secret/keyper-secret`.
+
+2. Save the screen output
