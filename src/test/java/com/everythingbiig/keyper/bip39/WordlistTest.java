@@ -1,8 +1,7 @@
 package com.everythingbiig.keyper.bip39;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import com.google.gson.Gson;
+import org.junit.jupiter.api.Test;
 
 public class WordlistTest {
 

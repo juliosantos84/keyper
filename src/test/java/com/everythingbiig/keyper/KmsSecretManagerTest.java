@@ -7,9 +7,9 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class KmsSecretManagerTest {
 
-    private static final String kmsKeyDev = "arn:aws:kms:us-east-1:297473205123:key/c539da97-bcd9-448c-9def-1b3cf3ddbded";
+    // private static final String kmsKeyDev = "arn:aws:kms:us-east-1:297473205123:key/c539da97-bcd9-448c-9def-1b3cf3ddbded";
 
-    private KmsSecretManager mgr = new KmsSecretManager(kmsKeyDev);
+    private KmsSecretManager mgr = new KmsSecretManager();
 
     @Test
     public void testEncrypt() {

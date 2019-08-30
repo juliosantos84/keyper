@@ -59,16 +59,12 @@ public class Keyper {
     }
 
     private static MnemonicPhrase decryptFromFile(File file) throws Exception {
-        System.out.println(String.format("Decrypting from file %s", file));
         MnemonicPhrase fromFile = new MnemonicPhrase();
         fromFile.decryptFromFile(file);
-        System.out.println(String.format("Done, decrypted %02d chars", fromFile.toJson().length()));
         return fromFile;
     }
 
     private static void encryptToFile(MnemonicPhrase phrase, File file) throws Exception {
-        System.out.println(String.format("Writing to file %s", file));
         phrase.encryptToFile(file);
-        System.out.println(String.format("Done, %02d bytes written", file.length()));
     }
 }

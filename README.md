@@ -1,10 +1,12 @@
 # keyper
 
-A simple utility to encrypt BIP39 mnemonic phrases using AWS KMS.
+A simple utility to keep your keys secret.  `keyper`, get it?  
+
+Supports capturing BIP39 mnemonic phrases with word validation, and encrypting to file using AWS KMS.
 
 ## requirements
 - An AWS account
-- awscli 1.16+
+- awscli 1.16+ (tested with 1.16.70)
 - java 1.8
 
 ## building
@@ -15,10 +17,11 @@ If you don't want to use the container, you can run `bin/build-java.sh` instead.
 
 ## setup
 
-1. Run `bin/download-wordlist.sh` to get the wordlist
-2. Run `bin/generate-key.sh <KEY_STAGE>` to create an AWS KMS key with the name `keyper-<KEY_STAGE>`.  Note the arns provided.
-3. Create an IAM user with permissions to use the key created.
-4. Create an access key for the user.
+1. Run `bin/download-wordlist.sh` to get the wordlist.
+2. Run `bin/generate-key.sh <KEY_STAGE>` to create an AWS KMS key with the name `keyper-<KEY_STAGE>`.
+The script will write the keys to `./KmsKey<KEYSTAGE>.txt` and will also update `gradle.properties` so it can be used in unit tests.
+3. Run `bin/create-iam-user.sh <USER_STAGE> <KEY_ARN> <KEY_ALIAS_ARN>` to create a user with access to the Kms key.
+4. Run `aws iam create-access-key --user-name KeyperUser<USER_STAGE>` to create an access key for the user.
 
 ## usage
 

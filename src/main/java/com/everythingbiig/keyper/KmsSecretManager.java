@@ -23,14 +23,6 @@ public class KmsSecretManager {
         this.kmsKey = AWS_KMS_KEY_ARN;
     }
 
-    public KmsSecretManager(String kmsKey) {
-        if(kmsKey != null) {
-            this.kmsKey = kmsKey;
-        } else {
-            this.kmsKey = AWS_KMS_KEY_ARN;
-        }
-    }
-
     public String getKey() {
         return this.kmsKey;
     }

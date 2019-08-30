@@ -12,20 +12,16 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class MnemonicPhrase {
 
-    private static String KEYPER_PHRASE_SIZE = System.getenv("KEYPER_PHRASE_SIZE");
+    public static final String KEYPER_PHRASE_SIZE = System.getenv("KEYPER_PHRASE_SIZE");
 
     private String[] phrase = null;
 
     private KmsSecretManager secretManager = new KmsSecretManager();
 
     public MnemonicPhrase() {
-        if ( KEYPER_PHRASE_SIZE != null && KEYPER_PHRASE_SIZE.length() > 0 ) {
-            this.phrase = new String[Integer.parseInt(KEYPER_PHRASE_SIZE)];
-        } else {
-            this.phrase = new String[24];
-        }
+        this.phrase = new String[defaultPhraseSize()];
     }
-    
+
     public MnemonicPhrase(int phraseSize) {
         this.phrase = new String[phraseSize];
     }
@@ -36,6 +32,14 @@ public class MnemonicPhrase {
 
     public MnemonicPhrase(String[] phrase) {
         this.phrase = phrase;
+    }
+
+    public static int defaultPhraseSize() {
+        int defaultSize = 24;
+        if ( KEYPER_PHRASE_SIZE != null && KEYPER_PHRASE_SIZE.length() > 0 ) {
+            defaultSize = Integer.parseInt(KEYPER_PHRASE_SIZE);
+        }
+        return defaultSize;
     }
 
     public void setPhrase(String[] phrase) {
@@ -71,19 +75,27 @@ public class MnemonicPhrase {
         return Arrays.equals(this.phrase, ((MnemonicPhrase)mnemonicPhrase).getPhrase());
     }
 
+    protected KmsSecretManager getSecretManager() {
+        return this.secretManager;
+    }
+    
     protected void setSecretManager(KmsSecretManager secretManager) {
         this.secretManager = secretManager;
     }
 
     public void decryptFromFile(File file) throws Exception {
+        System.out.println(String.format("Decrypting from file %s using %s", file, getSecretManager().getKey()));
         SdkBytes encryptedBytesFromFile = readFromFile(file.getAbsolutePath());
         String decryptedJson = secretManager.decryptString(encryptedBytesFromFile);
         fromJson(decryptedJson);
+        System.out.println(String.format("Done, decrypted %02d chars", toJson().length()));
     }
 
     public void encryptToFile(File file) throws Exception {
+        System.out.println(String.format("Encrypting to file %s using %s", file, getSecretManager().getKey()));
         SdkBytes encryptedBytes = secretManager.encryptString(this.toJson());
         writeToFile(file.getAbsolutePath(), encryptedBytes);
+        System.out.println(String.format("Done, %02d bytes written", file.length()));
     }
 
     protected void writeToFile(String filePath, SdkBytes bytes) throws Exception {

@@ -29,6 +29,10 @@ shadowJar {
    version = "${version}"
 }
 
+
+String devKeyArn = project.findProperty('AWS_KMS_KEY_ARN')
+
 test {
     useJUnitPlatform()
+    environment "AWS_KMS_KEY_ARN", "${devKeyArn}"
 }
