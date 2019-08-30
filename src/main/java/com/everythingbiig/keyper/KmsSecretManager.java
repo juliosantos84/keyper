@@ -15,12 +15,13 @@ public class KmsSecretManager {
     
     private static final String AWS_KMS_KEY_ARN = System.getenv("AWS_KMS_KEY_ARN");
 
-    private static final AWSKMS kmsClient = AWSKMSClientBuilder.defaultClient();
+    private AWSKMS kmsClient = null;
 
     private String kmsKey = null;
 
     public KmsSecretManager() {
         this.kmsKey = AWS_KMS_KEY_ARN;
+        this.kmsClient = AWSKMSClientBuilder.defaultClient();
     }
 
     public String getKey() {

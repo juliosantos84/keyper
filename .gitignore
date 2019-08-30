@@ -10,3 +10,4 @@ bin/main/
 bin/test/
 secrets/
 tmp/
+gradle.properties

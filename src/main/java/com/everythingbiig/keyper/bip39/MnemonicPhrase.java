@@ -84,7 +84,7 @@ public class MnemonicPhrase {
     }
 
     public void decryptFromFile(File file) throws Exception {
-        System.out.println(String.format("Decrypting from file %s using %s", file, getSecretManager().getKey()));
+        System.out.println(String.format("Decrypting from file %s", file));
         SdkBytes encryptedBytesFromFile = readFromFile(file.getAbsolutePath());
         String decryptedJson = secretManager.decryptString(encryptedBytesFromFile);
         fromJson(decryptedJson);
