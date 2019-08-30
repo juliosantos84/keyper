@@ -27,7 +27,6 @@ The script will write the keys to `./KmsKey<KEYSTAGE>.txt` and will also update 
 
 You can run this on your local environment, or in a container.
 
-Before starting configure the 
 ### capture & encrypt
 
 Captures a mnemonic phrase and encrypts it to a file
