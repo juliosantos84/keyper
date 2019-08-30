@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import software.amazon.awssdk.core.SdkBytes;
 
-public class KmsSecretManagerTest {}
+public class KmsSecretManagerTest {
 
     private KmsSecretManager mgr = new KmsSecretManager();
 
