@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 public class MnemonicPhraseTest {
 
-    // private static final String kmsKeyDev = "arn:aws:kms:us-east-1:297473205123:key/c539da97-bcd9-448c-9def-1b3cf3ddbded";
-
     private static final KmsSecretManager secretManager = new KmsSecretManager();
 
     @Test
