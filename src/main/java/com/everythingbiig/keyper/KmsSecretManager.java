@@ -1,8 +1,5 @@
 package com.everythingbiig.keyper;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 
 import com.amazonaws.services.kms.AWSKMS;
@@ -16,12 +13,14 @@ import software.amazon.awssdk.core.SdkBytes;
 
 public class KmsSecretManager {
     
+    private static final String AWS_KMS_KEY_ARN = System.getenv("AWS_KMS_KEY_ARN");
+
     private static final AWSKMS kmsClient = AWSKMSClientBuilder.defaultClient();
 
     private String kmsKey = null;
 
-    public KmsSecretManager(String kmsKey) {
-        this.kmsKey = kmsKey;
+    public KmsSecretManager() {
+        this.kmsKey = AWS_KMS_KEY_ARN;
     }
 
     public String getKey() {
@@ -49,48 +48,5 @@ public class KmsSecretManager {
 
     public String decryptString(SdkBytes cipherblob) {
         return new String(decryptBytes(cipherblob).asByteArray());
-    }
-
-    public void writeToFile(String filePath, SdkBytes bytes) throws Exception {
-        File file = new File(filePath);
-        if (file.exists()) {
-            throw new Exception(
-                String.format("The file %s already exists, please rename/delete manually before proceeding.", 
-                file.getAbsolutePath())
-            );
-        }
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(file);
-            fos.write(bytes.asByteArray());
-            fos.flush();
-        } finally {
-            if (fos != null) {
-                fos.close();
-            }
-        }
-    }
-
-    public SdkBytes readFromFile(String filePath) throws Exception {
-        File file = new File(filePath);
-        if (!file.exists()) {
-            throw new Exception(String.format("The file %s doesn't exist", file.getAbsolutePath()));
-        }
-        byte[] fileContents = new byte[ (int) file.length() ];
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-            
-            fis.read(fileContents);
-
-        } finally {
-            if (fis != null) {
-                fis.close();
-            }
-        }
-        return SdkBytes.fromByteArray(fileContents);
     }
 }

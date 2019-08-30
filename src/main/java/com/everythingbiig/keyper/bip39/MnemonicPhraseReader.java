@@ -6,14 +6,12 @@ import java.io.InputStreamReader;
 
 public class MnemonicPhraseReader {
 
-    public final static int PHRASE_SIZE_DEFAULT = 24;
-
     private int phraseSize;
 
     private BufferedReader reader = null;
 
     public MnemonicPhraseReader() {
-        this.phraseSize = PHRASE_SIZE_DEFAULT;
+        this.phraseSize = MnemonicPhrase.defaultPhraseSize();
     }
 
     public MnemonicPhraseReader(int phraseSize, BufferedReader reader) {

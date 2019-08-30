@@ -10,8 +10,6 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 
-import software.amazon.awssdk.core.SdkBytes;
-
 public class Keyper {
 
     private static CommandLineParser parser = new DefaultParser();
@@ -20,10 +18,6 @@ public class Keyper {
     static {
         options.addOption("d", "decrypt (on-screen only) the given file");
     }
-    
-    private static final String AWS_KMS_KEY_ARN = System.getenv("AWS_KMS_KEY_ARN");
-
-    private static final int PHRASE_SIZE = Integer.parseInt(System.getenv("KEYPER_PHRASE_SIZE"));
 
     private static final File SECRET_FILE = new File(System.getenv("KEYPER_SECRET_FILE"));
 
@@ -31,44 +25,46 @@ public class Keyper {
         CommandLine cmd = parser.parse( options, args);
 
         MnemonicPhraseReader phraseReader = 
-            new MnemonicPhraseReader(PHRASE_SIZE, null);
-        KmsSecretManager secretManager = new KmsSecretManager(AWS_KMS_KEY_ARN);
+            new MnemonicPhraseReader();
 
         if (cmd.hasOption("d")) {
-            MnemonicPhrase fromJson = readEncryptedFile(secretManager);
+            // Decrypt from the given file
+            MnemonicPhrase fromJson = decryptFromFile(SECRET_FILE);
             print(fromJson);
-            System.exit(0);
+        } else {
+            if(SECRET_FILE.exists()) {
+                throw new Exception(
+                    String.format("The file %s already exists, please rename/delete manually before proceeding.", 
+                    SECRET_FILE.getAbsolutePath()
+                    )
+                );
+            }
+            // Capture & encrypt to given file
+            MnemonicPhrase phrase = phraseReader.readFromStandardIn();
+
+            System.out.println("You entered: \n" + phrase.toText());
+    
+            encryptToFile(phrase, SECRET_FILE);
+    
+            System.out.println("\n");
+            
+            MnemonicPhrase fromJson = decryptFromFile(SECRET_FILE);
+
+            print(fromJson);
         }
-
-        MnemonicPhrase phrase = phraseReader.readFromStandardIn();
-
-        System.out.println("You entered: \n" + phrase.toText());
-
-        String json = phrase.toJson();
-
-        writeEncryptedFile(secretManager, json);
-
-        MnemonicPhrase fromJson = readEncryptedFile(secretManager);
-
-        print(fromJson);
-
     }
 
     private static void print(MnemonicPhrase fromJson) {
         System.out.println("Decrypted (from file): \n" + fromJson.toText());
     }
 
-    private static MnemonicPhrase readEncryptedFile(KmsSecretManager secretManager) throws Exception {
-        SdkBytes encryptedBytesFromFile = secretManager.readFromFile(SECRET_FILE.getAbsolutePath());
-        String decryptedJson = secretManager.decryptString(encryptedBytesFromFile);
-        MnemonicPhrase fromJson = new MnemonicPhrase();
-        fromJson.fromJson(decryptedJson);
-        return fromJson;
+    private static MnemonicPhrase decryptFromFile(File file) throws Exception {
+        MnemonicPhrase fromFile = new MnemonicPhrase();
+        fromFile.decryptFromFile(file);
+        return fromFile;
     }
 
-    private static void writeEncryptedFile(KmsSecretManager mgr, String json) throws Exception {
-        SdkBytes encryptedBytes = mgr.encryptString(json);
-        
-        mgr.writeToFile(SECRET_FILE.getAbsolutePath(), encryptedBytes);
+    private static void encryptToFile(MnemonicPhrase phrase, File file) throws Exception {
+        phrase.encryptToFile(file);
     }
 }
