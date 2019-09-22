@@ -5,6 +5,7 @@ KEYPER_POLICY_NAME="KeyperKmsPolicy${STAGE}"
 KEYPER_USER_NAME="KeyperUser${STAGE}"
 KMS_KEY_ARN=$2
 KMS_KEY_ALIAS_ARN=$3
+USER_INFO_FILE="./tmp/KmsUser${STAGE}"
 
 mkdir -p ./tmp
 
@@ -52,5 +53,11 @@ POLICY
 KEYPER_POLICY_ARN=$(aws iam create-policy --policy-name $KEYPER_POLICY_NAME \
     --policy-document file://tmp/policy.json \
     | jq -r '.Policy.Arn')
+
+cat -e << USER_INFO > ${USER_INFO_FILE}
+KEYPER_USER_NAME=${KEYPER_USER_NAME}
+KEYPER_POLICY_ARN=${KEYPER_POLICY_ARN}
+USER_INFO
+
 aws iam create-user --user-name $KEYPER_USER_NAME
 aws iam attach-user-policy --user-name $KEYPER_USER_NAME --policy-arn $KEYPER_POLICY_ARN
